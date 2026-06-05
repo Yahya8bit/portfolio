@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* dark mode = .dark class on <html> (class strategy) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* --color-ink references --ink so it flips between light/dark automatically */
+  --color-ink: var(--ink);
+  --color-blue: #1565c0;
+  --color-cyan: #29b6e8;
+  /* accent aliases the primary blue so existing accent utilities read clearly as blue */
+  --color-accent: #1565c0;
+  --color-accent-soft: #e3f0fb;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 20px;
+}
+
+:root {
+  --ink: #1b1b2f;
+  --page-bg: #ffffff;
+  --band: rgba(250, 250, 247, 0.85); /* warm off-white */
+  --graph-dot: 21, 101, 192; /* #1565C0 */
+  --graph-line: 41, 182, 232; /* #29B6E8 */
+}
+
+.dark {
+  --ink: #e6eaf2;
+  --page-bg: #0b1220; /* near-black navy */
+  --band: rgba(255, 255, 255, 0.04); /* subtle dark variation */
+  --graph-dot: 147, 197, 253; /* lighter blue */
+  --graph-line: 56, 189, 248; /* lighter cyan */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* anchor offset so sticky nav doesn't cover section tops */
+section[id] {
+  scroll-margin-top: 100px;
+}
+
+/* content sits above the fixed node-graph; neutral band (light) / subtle dark
+   variation (dark) so the blue graph stays visible through it */
+section[id],
+footer {
+  position: relative;
+  background-color: var(--band);
+}
