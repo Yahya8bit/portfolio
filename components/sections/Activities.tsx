@@ -4,12 +4,12 @@ import { SectionTitle } from "@/components/ui";
 
 const activities = [
   {
-    img: "/projects/esen_competition.jpeg",
+    img: "/projects/activity-cpc.jpeg",
     title: "ENSI CPC",
     sub: "Competitive Programming Club",
   },
   {
-    img: "/projects/tcpc_2k26.jpeg",
+    img: "/projects/activity-tcpc.jpeg",
     title: "TCPC 2026",
     sub: "Tunisian Collegiate Programming Contest",
   },
@@ -42,7 +42,7 @@ export default function Activities() {
                   alt={`${a.title} — ${a.sub}`}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <figcaption className="mt-4">
