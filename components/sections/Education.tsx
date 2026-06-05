@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, GraduationCap, MapPin } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { SectionTitle } from "@/components/ui";
 
@@ -10,6 +10,7 @@ const schools = [
     school: "ENSI, Manouba",
     degree: "Computer Engineering Cycle",
     dates: "Sept 2025 — Present",
+    location: "Manouba, Tunisia",
     points: [
       "First year of the engineering cycle at the National School of Computer Science (ENSI).",
       "Member of ENSI CPC (Competitive Programming Club) and ORBYX (AI/ML club).",
@@ -20,6 +21,7 @@ const schools = [
     school: "IPEIM, Monastir",
     degree: "Preparatory Studies for Engineering",
     dates: "Sept 2023 — June 2025",
+    location: "Monastir, Tunisia",
     points: [
       "Two-year intensive preparatory program in mathematics and physics.",
       "Built strong foundations in mathematics, physics, and algorithmic thinking.",
@@ -30,6 +32,7 @@ const schools = [
     school: "Lycée les Élites, Sousse",
     degree: "Baccalauréat in Mathematics",
     dates: "Sept 2022 — June 2023",
+    location: "Sousse, Tunisia",
     points: [
       "Mathematics track with a strong focus on math and the sciences.",
       "Graduated in 2023 before joining preparatory studies.",
@@ -66,12 +69,19 @@ export default function Education() {
           ))}
         </ul>
 
-        <div>
-          <h3 className="text-2xl font-bold">
-            {item.degree}{" "}
-            <span className="text-blue">@ {item.school}</span>
-          </h3>
-          <p className="mt-1 font-semibold text-ink/70">{item.dates}</p>
+        <div className="rounded-[20px] border border-ink/10 bg-white/50 p-7 dark:bg-white/[0.03]">
+          <div className="flex items-center gap-2.5">
+            <GraduationCap size={22} className="shrink-0 text-blue" aria-hidden />
+            <h3 className="text-xl font-bold sm:text-2xl">
+              {item.degree}{" "}
+              <span className="text-blue">@ {item.school}</span>
+            </h3>
+          </div>
+          <p className="mt-2 font-semibold text-ink/70">{item.dates}</p>
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-ink/55">
+            <MapPin size={14} className="text-blue" aria-hidden />
+            {item.location}
+          </p>
           <ul className="mt-6 space-y-3">
             {item.points.map((pt) => (
               <li key={pt} className="flex gap-3 text-ink/75">
