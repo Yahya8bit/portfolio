@@ -20,14 +20,49 @@ export default function MyStory() {
         </Reveal>
 
       <Reveal delay={0.1}>
-        <div className="mt-10 grid gap-8 sm:grid-cols-[220px_1fr] sm:gap-10">
-          <Image
-            src="/projects/supcom.jpeg"
-            alt="At a university campus event"
-            width={300}
-            height={400}
-            className="h-72 w-full rounded-[20px] object-cover object-top sm:h-full sm:max-h-[420px]"
-          />
+        {/*
+          Two-column layout on sm+ (a 280px image column + flexible text).
+          The grid uses the default `align-items: stretch`, so both columns grow
+          to the full height of the row. Paired with `sm:h-full` on the image
+          wrapper, the photo stretches to match the paragraph block's height —
+          top and bottom edges line up with the text.
+        */}
+        <div className="mt-10 grid gap-8 sm:grid-cols-[280px_1fr] sm:gap-10">
+          {/*
+            Portrait wrapper.
+            - `relative` makes this the positioning context, so the gradient
+              overlay below (which is `absolute inset-0`) is sized/placed
+              relative to THIS box, not the page.
+            - `group` lets child elements react to hover on the wrapper
+              (e.g. `group-hover:*`).
+            - `overflow-hidden` + `rounded-[20px]` clip both the image and the
+              zoom so nothing spills past the rounded corners.
+            - `ring-2 ring-blue` is the thin blue ring, matching the hero portrait.
+          */}
+          <div className="group relative h-80 overflow-hidden rounded-[20px] ring-2 ring-blue sm:h-full">
+            {/*
+              The photo. `fill` makes it cover the wrapper.
+              Hover effect: `group-hover:scale-105` is a gentle zoom, animated by
+              `transition-transform duration-500` so it eases over 0.5s instead of
+              snapping. (Full color by default — no grayscale filter.)
+            */}
+            <Image
+              src="/projects/supcom.jpeg"
+              alt="At a university campus event"
+              fill
+              sizes="(max-width: 640px) 100vw, 220px"
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+            {/*
+              Gradient overlay sits ON TOP of the image because it comes after it
+              in the DOM and is `absolute inset-0` (stretched to all four edges of
+              the relative wrapper). It shares the same stacking context, so later
+              sibling = painted above. `pointer-events-none` lets clicks/hover pass
+              through to the image. The gradient fades from transparent at the top
+              to ~70% dark navy at the bottom, blending the photo into the theme.
+            */}
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent to-[#0b1220]/70" />
+          </div>
           <div className="space-y-6 text-lg leading-relaxed text-ink/70">
           <p>
             My path started with a love for{" "}
