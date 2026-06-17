@@ -181,9 +181,15 @@ export default function Preloader() {
   // charged → firing after 200ms hold
   useEffect(() => {
     if (phase !== 'charged') return;
-    const t = setTimeout(() => setPhase('firing'), 200);
+    const t = setTimeout(() => {
+      if (prefersReducedMotion) {
+        setPhase('done');
+      } else {
+        setPhase('firing');
+      }
+    }, 200);
     return () => clearTimeout(t);
-  }, [phase]);
+  }, [phase, prefersReducedMotion]);
 
   // Canvas particle loop
   useEffect(() => {
@@ -289,6 +295,49 @@ export default function Preloader() {
       window.removeEventListener('resize', resize);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (prefersReducedMotion) {
+    return (
+      <AnimatePresence>
+        {phase !== 'done' && (
+          <motion.div
+            key="preloader-reduced"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.4 } }}
+            onAnimationComplete={(def) => {
+              if (def === 'exit') {
+                // scroll already restored by main useEffect cleanup
+              }
+            }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 50,
+              background: '#0b1220',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2rem',
+            }}
+          >
+            <WarriorSVG progress={1} />
+            <div style={{ width: '200px' }}>
+              <progress
+                value={progress}
+                max={1}
+                style={{
+                  width: '100%',
+                  height: '4px',
+                  accentColor: '#29b6e8',
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
 
   return (
     <>
