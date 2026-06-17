@@ -266,6 +266,19 @@ export default function Preloader() {
         ctx.fill();
       }
 
+      // Screen shake — applied directly to DOM via ref to avoid setState per frame
+      if (prog > 0.7 && phaseRef.current === 'charging') {
+        const amplitude = ((prog - 0.7) / 0.3) * 4; // 0→4px
+        const now = Date.now();
+        const sx = Math.sin(now * 0.025) * amplitude;
+        const sy = Math.cos(now * 0.018) * amplitude * 0.6;
+        if (overlayRef.current) {
+          overlayRef.current.style.transform = `translate(${sx}px,${sy}px)`;
+        }
+      } else if (overlayRef.current) {
+        overlayRef.current.style.transform = 'translate(0,0)';
+      }
+
       canvasRafRef.current = requestAnimationFrame(draw);
     }
 
