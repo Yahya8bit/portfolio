@@ -290,26 +290,62 @@ export default function Preloader() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (phase === 'done') return null;
-
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#0b1220' }}>
-      <canvas
-        ref={canvasRef}
-        style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
-      />
-      <div
-        ref={overlayRef}
-        style={{
-          position: 'relative',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <WarriorSVG progress={progress} />
-      </div>
-    </div>
+    <>
+      <AnimatePresence>
+        {phase !== 'done' && (
+          <motion.div
+            key="preloader-overlay"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.25, ease: 'easeOut' } }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#0b1220' }}
+          >
+            <canvas
+              ref={canvasRef}
+              style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+            />
+            <div
+              ref={overlayRef}
+              style={{
+                position: 'relative',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <WarriorSVG progress={progress} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Beam flash — separate AnimatePresence so it outlives the overlay */}
+      <AnimatePresence>
+        {phase === 'firing' && (
+          <motion.div
+            key="beam-flash"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
+            transition={{ duration: 0.08, ease: 'easeIn' }}
+            onAnimationComplete={(definition) => {
+              // Only advance on the enter animation, not the exit
+              if (!beamFiredRef.current) {
+                beamFiredRef.current = true;
+                setPhase('done');
+              }
+            }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 52,
+              background: '#ffffff',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
