@@ -185,11 +185,118 @@ export default function Preloader() {
     return () => clearTimeout(t);
   }, [phase]);
 
+  // Canvas particle loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    function resize() {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = particlesRef.current;
+    let frameCount = 0;
+
+    function spawnParticle() {
+      if (!canvas) return;
+      const cx = canvas.width / 2;
+      // Orb is at SVG y=232 inside 420-tall SVG centered on screen.
+      // Offset from SVG center (y=210) to orb: 232-210 = +22px
+      const cy = canvas.height / 2 + 22;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 15 + Math.random() * 30;
+      particles.push({
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
+        vx: (Math.random() - 0.5) * 1.4,
+        vy: -(1.5 + Math.random() * 2.5),
+        alpha: 0.7 + Math.random() * 0.3,
+        radius: 1.5 + Math.random() * 3,
+        hue: 185 + Math.random() * 30, // cyan range
+      });
+    }
+
+    function draw() {
+      if (!canvas || !ctx) return;
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2 + 22;
+      const prog = progressRef.current;
+
+      // Radial glow bloom behind figure
+      const bloomR = 80 + prog * 180;
+      const bloom = ctx.createRadialGradient(cx, cy - 80, 0, cx, cy - 80, bloomR);
+      bloom.addColorStop(0, `rgba(41,182,232,${0.18 * prog})`);
+      bloom.addColorStop(0.5, `rgba(21,101,192,${0.1 * prog})`);
+      bloom.addColorStop(1, 'rgba(21,101,192,0)');
+      ctx.fillStyle = bloom;
+      ctx.beginPath();
+      ctx.arc(cx, cy - 80, bloomR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Spawn particles — more frequent as progress increases
+      frameCount++;
+      const spawnEvery = Math.max(2, Math.round(10 - prog * 8));
+      if (frameCount % spawnEvery === 0 && particles.length < 80) {
+        spawnParticle();
+      }
+
+      // Update + draw particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.007;
+        if (p.alpha <= 0 || p.y < -10) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue},90%,75%,${p.alpha})`;
+        ctx.fill();
+      }
+
+      canvasRafRef.current = requestAnimationFrame(draw);
+    }
+
+    canvasRafRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(canvasRafRef.current);
+      window.removeEventListener('resize', resize);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (phase === 'done') return null;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#0b1220', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <WarriorSVG progress={progress} />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#0b1220' }}>
+      <canvas
+        ref={canvasRef}
+        style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+      />
+      <div
+        ref={overlayRef}
+        style={{
+          position: 'relative',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <WarriorSVG progress={progress} />
+      </div>
     </div>
   );
 }
