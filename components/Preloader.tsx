@@ -273,7 +273,7 @@ export default function Preloader() {
       }
 
       // Screen shake — applied directly to DOM via ref to avoid setState per frame
-      if (prog > 0.7 && phaseRef.current === 'charging') {
+      if (prog > 0.7 && (phaseRef.current === 'charging' || phaseRef.current === 'charged')) {
         const amplitude = ((prog - 0.7) / 0.3) * 4; // 0→4px
         const now = Date.now();
         const sx = Math.sin(now * 0.025) * amplitude;
@@ -304,11 +304,6 @@ export default function Preloader() {
             key="preloader-reduced"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.4 } }}
-            onAnimationComplete={(def) => {
-              if (def === 'exit') {
-                // scroll already restored by main useEffect cleanup
-              }
-            }}
             style={{
               position: 'fixed',
               inset: 0,
