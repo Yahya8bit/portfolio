@@ -15,6 +15,102 @@ interface Particle {
   hue: number;
 }
 
+function WarriorSVG({ progress }: { progress: number }) {
+  const orbRadius = 12 + progress * 22;      // 12 → 34
+  const orbOpacity = 0.3 + progress * 0.7;   // 0.3 → 1.0
+  const glowBlur = 6 + progress * 18;        // 6 → 24
+  const glowRadius = orbRadius * 2.8;
+  const figureGlowOpacity = 0.4 * progress;
+
+  return (
+    <svg
+      viewBox="0 0 300 420"
+      width="300"
+      height="420"
+      style={{ overflow: 'visible' }}
+      aria-hidden="true"
+    >
+      <defs>
+        <filter id="orb-glow" x="-150%" y="-150%" width="400%" height="400%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation={glowBlur} result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter id="figure-glow" x="-20%" y="-10%" width="140%" height="120%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation={4 + progress * 8} result="blur" />
+          <feFlood floodColor="#29b6e8" floodOpacity={figureGlowOpacity} result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="shadow" />
+          <feMerge>
+            <feMergeNode in="shadow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <radialGradient id="orb-grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="35%" stopColor="#29b6e8" />
+          <stop offset="100%" stopColor="#1565c0" />
+        </radialGradient>
+      </defs>
+
+      {/* Orb glow halo behind figure */}
+      <circle
+        cx="150"
+        cy="232"
+        r={glowRadius}
+        fill="#1565c0"
+        opacity={orbOpacity * 0.35}
+        filter="url(#orb-glow)"
+      />
+
+      {/* Warrior silhouette — original design, wide ki-charge stance */}
+      <g fill="black" filter="url(#figure-glow)">
+        {/* Head */}
+        <circle cx="150" cy="45" r="28" />
+        {/* Neck */}
+        <rect x="138" y="70" width="24" height="18" />
+        {/* Torso */}
+        <polygon points="78,86 222,86 192,175 108,175" />
+        {/* Left upper arm */}
+        <polygon points="78,86 58,94 22,152 54,164" />
+        {/* Left forearm — angled toward center below waist */}
+        <polygon points="22,152 54,164 96,220 68,224" />
+        {/* Right upper arm */}
+        <polygon points="222,86 242,94 278,152 246,164" />
+        {/* Right forearm — angled toward center below waist */}
+        <polygon points="278,152 246,164 204,220 232,224" />
+        {/* Left hand cupped */}
+        <ellipse cx="80" cy="228" rx="20" ry="10" />
+        {/* Right hand cupped */}
+        <ellipse cx="220" cy="228" rx="20" ry="10" />
+        {/* Left thigh — wide stance angled outward */}
+        <polygon points="108,175 150,175 138,272 92,272" />
+        {/* Right thigh */}
+        <polygon points="150,175 192,175 208,272 162,272" />
+        {/* Left shin */}
+        <polygon points="92,272 138,272 128,365 80,365" />
+        {/* Right shin */}
+        <polygon points="162,272 208,272 220,365 174,365" />
+        {/* Left foot */}
+        <ellipse cx="96" cy="374" rx="32" ry="11" />
+        {/* Right foot */}
+        <ellipse cx="204" cy="374" rx="32" ry="11" />
+      </g>
+
+      {/* Energy orb between cupped hands */}
+      <circle
+        cx="150"
+        cy="232"
+        r={orbRadius}
+        fill="url(#orb-grad)"
+        opacity={orbOpacity}
+        filter="url(#orb-glow)"
+      />
+    </svg>
+  );
+}
+
 export default function Preloader() {
   const [phase, setPhase] = useState<Phase>('charging');
   const [progress, setProgress] = useState(0); // 0–1
@@ -93,9 +189,7 @@ export default function Preloader() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#0b1220', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: '#29b6e8', fontFamily: 'var(--font-poppins)', fontSize: '1rem' }}>
-        {Math.round(progress * 100)}%
-      </p>
+      <WarriorSVG progress={progress} />
     </div>
   );
 }
