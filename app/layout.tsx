@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import NodeGraph from "@/components/NodeGraph";
 import Preloader from "@/components/Preloader";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased dark`}>
       <body className="min-h-full flex flex-col">
+        <ScrollProgress />
         <Preloader />
         <NodeGraph />
         {children}
