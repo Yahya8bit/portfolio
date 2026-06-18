@@ -131,6 +131,13 @@ export default function Preloader() {
     phaseRef.current = phase;
   }, [phase]);
 
+  // Restore scroll when done
+  useEffect(() => {
+    if (phase === 'done') {
+      document.body.style.overflow = '';
+    }
+  }, [phase]);
+
   // Progress tracking + scroll lock
   useEffect(() => {
     document.body.style.overflow = 'hidden';
