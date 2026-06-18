@@ -10,7 +10,7 @@ const EMAIL = "mohamedyahia.gazzah@ensi-uma.tn";
 const FORMSPREE = "https://formspree.io/f/maqznkbd";
 
 const inputClass =
-  "w-full rounded-[14px] border border-ink/15 bg-white px-4 py-3 text-ink placeholder:text-ink/40 outline-none transition-colors focus:border-blue dark:bg-white/5";
+  "w-full rounded-[14px] border border-ink/15 bg-white px-4 py-3 text-ink placeholder:text-ink/40 outline-none transition-colors focus:border-blue focus-visible:ring-2 focus-visible:ring-blue/40 dark:bg-white/5";
 
 type Status = "idle" | "sending" | "ok" | "error";
 
@@ -39,7 +39,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    <section id="contact" className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-2xl">
         <Reveal>
           <SectionTitle>Contact</SectionTitle>
@@ -56,7 +56,7 @@ export default function Contact() {
               Thanks! Your message has been sent — I&apos;ll reply soon.
             </p>
           ) : (
-            <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
+            <form onSubmit={onSubmit} className="mt-8 space-y-3" noValidate>
               <div className="grid gap-4 sm:grid-cols-2">
                 <input
                   name="name"
@@ -102,7 +102,7 @@ export default function Contact() {
           <div className="mt-8 flex flex-wrap gap-5 text-sm text-ink/70">
             <Link
               href={`mailto:${EMAIL}`}
-              className="inline-flex items-center gap-2 transition-colors hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-md px-1 transition-colors hover:text-accent hover:underline"
             >
               <Mail size={16} /> {EMAIL}
             </Link>
@@ -110,7 +110,7 @@ export default function Contact() {
               href="https://www.linkedin.com/in/yahya-gazzeh-348328305/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 transition-colors hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-md px-1 transition-colors hover:text-accent hover:underline"
             >
               <Linkedin size={16} /> LinkedIn
             </Link>
@@ -118,7 +118,7 @@ export default function Contact() {
               href="https://github.com/Yahya8bit"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 transition-colors hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-md px-1 transition-colors hover:text-accent hover:underline"
             >
               <Github size={16} /> GitHub
             </Link>

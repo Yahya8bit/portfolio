@@ -35,6 +35,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Visible focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #1565c0;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 body {
   background: var(--page-bg);
   color: var(--color-ink);

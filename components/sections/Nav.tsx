@@ -8,7 +8,7 @@ import AnchorLink from "@/components/AnchorLink";
 export default function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-white/90 shadow-sm backdrop-blur-md dark:bg-[#0b1220]/90">
-      <nav className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center py-5">
+      <nav className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-5">
         <AnchorLink
           href="#home"
           aria-label="Mohamed Yahia Gazzeh — home"

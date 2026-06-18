@@ -27,7 +27,7 @@ const columns = [
 
 export default function Skills() {
   return (
-    <section id="skills" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    <section id="skills" className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
       <Reveal>
         <SectionTitle>Skills</SectionTitle>
       </Reveal>
